@@ -8,5 +8,11 @@ module.exports = {
     'no-useless-escape': 'off',
     'no-case-declarations': 'off',
     'no-console': ['warn', {allow: ['warn', 'error']}],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 };
