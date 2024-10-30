@@ -9,6 +9,8 @@ import {vercelPreset} from '@vercel/remix/vite';
 export default defineConfig({
   plugins: [
     tailwindcss(),
+    hydrogen(),
+    oxygen(),
     remix({
       presets: [vercelPreset()],
       future: {
