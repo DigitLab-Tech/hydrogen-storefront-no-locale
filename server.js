@@ -16,6 +16,7 @@ export default {
    * @return {Promise<Response>}
    */
   async fetch(request, env, executionContext) {
+    console.log('test');
     try {
       const appLoadContext = await createAppLoadContext(
         request,
@@ -57,7 +58,6 @@ export default {
 
       return response;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error(error);
       return new Response('An unexpected error occurred', {status: 500});
     }
