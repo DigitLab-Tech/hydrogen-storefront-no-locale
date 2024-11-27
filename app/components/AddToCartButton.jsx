@@ -29,6 +29,7 @@ export function AddToCartButton({
             type="submit"
             onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
+            className="rounded bg-primary p-3 text-white w-fit font-bold"
           >
             {children}
           </button>

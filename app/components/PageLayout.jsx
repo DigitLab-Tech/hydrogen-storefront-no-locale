@@ -1,5 +1,5 @@
 import {Await, Link} from '@remix-run/react';
-import {Suspense, useId} from 'react';
+import React, {Suspense, useId} from 'react';
 import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
@@ -34,7 +34,7 @@ export function PageLayout({
           publicStoreDomain={publicStoreDomain}
         />
       )}
-      <main>{children}</main>
+      <main className="grow">{children}</main>
       <Footer
         footer={footer}
         header={header}
@@ -64,9 +64,8 @@ function CartAside({cart}) {
 function SearchAside() {
   const queriesDatalistId = useId();
   return (
-    <Aside type="search" heading="SEARCH">
+    <Aside type="search" heading="Search">
       <div className="predictive-search">
-        <br />
         <SearchFormPredictive>
           {({fetchResults, goToSearch, inputRef}) => (
             <>
@@ -74,13 +73,12 @@ function SearchAside() {
                 name="q"
                 onChange={fetchResults}
                 onFocus={fetchResults}
-                placeholder="Search"
+                placeholder="Term"
                 ref={inputRef}
                 type="search"
                 list={queriesDatalistId}
+                className="w-full border-b-gray p-3 font-display border-t-0 border-x-0 border-1 rounded focus-visible:outline-0"
               />
-              &nbsp;
-              <button onClick={goToSearch}>Search</button>
             </>
           )}
         </SearchFormPredictive>

@@ -9,10 +9,9 @@ export function CartSummary({cart, layout}) {
     layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
 
   return (
-    <div aria-labelledby="cart-summary" className={className}>
-      <h4>Totals</h4>
-      <dl className="cart-subtotal">
-        <dt>Subtotal</dt>
+    <div aria-labelledby="cart-summary" className={`grid gap-3 ${className}`}>
+      <dl className="cart-subtotal font-bold justify-self-end">
+        <dt>Subtotal </dt>
         <dd>
           {cart.cost?.subtotalAmount?.amount ? (
             <Money data={cart.cost?.subtotalAmount} />
@@ -21,8 +20,7 @@ export function CartSummary({cart, layout}) {
           )}
         </dd>
       </dl>
-      <CartDiscounts discountCodes={cart.discountCodes} />
-      <CartGiftCard giftCardCodes={cart.appliedGiftCards} />
+
       <CartCheckoutActions checkoutUrl={cart.checkoutUrl} />
     </div>
   );
@@ -35,8 +33,12 @@ function CartCheckoutActions({checkoutUrl}) {
 
   return (
     <div>
-      <a href={checkoutUrl} target="_self">
-        <p>Continue to Checkout &rarr;</p>
+      <a
+        href={checkoutUrl}
+        target="_self"
+        className="flex justify-center p-3 w-full bg-primary rounded text-white font-bold"
+      >
+        Continue to Checkout &rarr;
       </a>
       <br />
     </div>
@@ -48,7 +50,7 @@ function CartCheckoutActions({checkoutUrl}) {
  *   discountCodes?: CartApiQueryFragment['discountCodes'];
  * }}
  */
-function CartDiscounts({discountCodes}) {
+export function CartDiscounts({discountCodes}) {
   const codes =
     discountCodes
       ?.filter((discount) => discount.applicable)
@@ -72,10 +74,19 @@ function CartDiscounts({discountCodes}) {
 
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div>
-          <input type="text" name="discountCode" placeholder="Discount code" />
-          &nbsp;
-          <button type="submit">Apply</button>
+        <div className="flex gap-3">
+          <input
+            type="text"
+            name="discountCode"
+            placeholder="Discount code"
+            className="grow border-b-gray p-2 font-display border-t-0 border-x-0 border-1 rounded focus-visible:outline-0"
+          />
+          <button
+            type="submit"
+            className="rounded bg-primary text-white py-1 px-3"
+          >
+            Apply
+          </button>
         </div>
       </UpdateDiscountForm>
     </div>
@@ -107,7 +118,7 @@ function UpdateDiscountForm({discountCodes, children}) {
  *   giftCardCodes: CartApiQueryFragment['appliedGiftCards'] | undefined;
  * }}
  */
-function CartGiftCard({giftCardCodes}) {
+export function CartGiftCard({giftCardCodes}) {
   const appliedGiftCardCodes = useRef([]);
   const giftCardCodeInput = useRef(null);
   const codes =
@@ -146,15 +157,20 @@ function CartGiftCard({giftCardCodes}) {
         giftCardCodes={appliedGiftCardCodes.current}
         saveAppliedCode={saveAppliedCode}
       >
-        <div>
+        <div className="flex gap-3">
           <input
             type="text"
             name="giftCardCode"
             placeholder="Gift card code"
             ref={giftCardCodeInput}
+            className="grow border-b-gray p-2 font-display border-t-0 border-x-0 border-1 rounded focus-visible:outline-0"
           />
-          &nbsp;
-          <button type="submit">Apply</button>
+          <button
+            type="submit"
+            className="rounded bg-primary text-white py-1 px-3"
+          >
+            Apply
+          </button>
         </div>
       </UpdateGiftCardForm>
     </div>
@@ -169,7 +185,7 @@ function CartGiftCard({giftCardCodes}) {
  *   children: React.ReactNode;
  * }}
  */
-function UpdateGiftCardForm({giftCardCodes, saveAppliedCode, children}) {
+export function UpdateGiftCardForm({giftCardCodes, saveAppliedCode, children}) {
   return (
     <CartForm
       route="/cart"

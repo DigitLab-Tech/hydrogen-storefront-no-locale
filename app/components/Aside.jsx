@@ -43,14 +43,14 @@ export function Aside({children, heading, type}) {
       role="dialog"
     >
       <button className="close-outside" onClick={close} />
-      <aside>
-        <header>
+      <aside className="font-display">
+        <header className="bg-primary text-white font-bold p-3">
           <h3>{heading}</h3>
           <button className="close reset" onClick={close}>
             &times;
           </button>
         </header>
-        <main>{children}</main>
+        <main className="p-3">{children}</main>
       </aside>
     </div>
   );

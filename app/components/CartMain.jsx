@@ -2,7 +2,7 @@ import {useOptimisticCart} from '@shopify/hydrogen';
 import {Link} from '@remix-run/react';
 import {useAside} from '~/components/Aside';
 import {CartLineItem} from '~/components/CartLineItem';
-import {CartSummary} from './CartSummary';
+import {CartSummary, CartDiscounts, CartGiftCard} from './CartSummary';
 
 /**
  * The main cart component that displays the cart items and summary.
@@ -22,8 +22,14 @@ export function CartMain({layout, cart: originalCart}) {
   const cartHasItems = cart?.totalQuantity > 0;
 
   return (
-    <div className={className}>
+    <div className={`grid gap-3 ${className}`}>
       <CartEmpty hidden={linesCount} layout={layout} />
+      {cartHasItems && (
+        <div className="grid gap-3">
+          <CartDiscounts discountCodes={cart.discountCodes} />
+          <CartGiftCard giftCardCodes={cart.appliedGiftCards} />
+        </div>
+      )}
       <div className="cart-details">
         <div aria-labelledby="cart-lines">
           <ul>

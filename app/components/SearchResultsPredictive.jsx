@@ -34,14 +34,18 @@ export function SearchResultsPredictive({children}) {
     aside.close();
   }
 
-  return children({
-    items,
-    closeSearch,
-    inputRef,
-    state: fetcher.state,
-    term,
-    total,
-  });
+  return (
+    <div className="py-6 font-display grid gap-6">
+      {children({
+        items,
+        closeSearch,
+        inputRef,
+        state: fetcher.state,
+        term,
+        total,
+      })}
+    </div>
+  );
 }
 
 SearchResultsPredictive.Articles = SearchResultsPredictiveArticles;
@@ -58,7 +62,7 @@ function SearchResultsPredictiveArticles({term, articles, closeSearch}) {
   if (!articles.length) return null;
 
   return (
-    <div className="predictive-search-result" key="articles">
+    <div className="grid gap-3" key="articles">
       <h5>Articles</h5>
       <ul>
         {articles.map((article) => {
@@ -75,8 +79,8 @@ function SearchResultsPredictiveArticles({term, articles, closeSearch}) {
                   <Image
                     alt={article.image.altText ?? ''}
                     src={article.image.url}
-                    width={50}
-                    height={50}
+                    width={60}
+                    height={60}
                   />
                 )}
                 <div>
@@ -98,8 +102,8 @@ function SearchResultsPredictiveCollections({term, collections, closeSearch}) {
   if (!collections.length) return null;
 
   return (
-    <div className="predictive-search-result" key="collections">
-      <h5>Collections</h5>
+    <div className="grid gap-3" key="collections">
+      <h5 className="font-bold">Collections</h5>
       <ul>
         {collections.map((collection) => {
           const colllectionUrl = urlWithTrackingParams({
@@ -115,8 +119,8 @@ function SearchResultsPredictiveCollections({term, collections, closeSearch}) {
                   <Image
                     alt={collection.image.altText ?? ''}
                     src={collection.image.url}
-                    width={50}
-                    height={50}
+                    width={60}
+                    height={60}
                   />
                 )}
                 <div>
@@ -138,8 +142,8 @@ function SearchResultsPredictivePages({term, pages, closeSearch}) {
   if (!pages.length) return null;
 
   return (
-    <div className="predictive-search-result" key="pages">
-      <h5>Pages</h5>
+    <div className="grid gap-3" key="pages">
+      <h5 className="font-bold">Pages</h5>
       <ul>
         {pages.map((page) => {
           const pageUrl = urlWithTrackingParams({
@@ -170,9 +174,9 @@ function SearchResultsPredictiveProducts({term, products, closeSearch}) {
   if (!products.length) return null;
 
   return (
-    <div className="predictive-search-result" key="products">
-      <h5>Products</h5>
-      <ul>
+    <div className="grid gap-3" key="products">
+      <h5 className="font-bold">Products</h5>
+      <ul className="grid gap-3">
         {products.map((product) => {
           const productUrl = urlWithTrackingParams({
             baseUrl: `/products/${product.handle}`,
@@ -188,8 +192,8 @@ function SearchResultsPredictiveProducts({term, products, closeSearch}) {
                   <Image
                     alt={image.altText ?? ''}
                     src={image.url}
-                    width={50}
-                    height={50}
+                    width={60}
+                    height={60}
                   />
                 )}
                 <div>

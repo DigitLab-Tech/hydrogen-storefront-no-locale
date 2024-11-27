@@ -1,25 +1,43 @@
 import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from '@remix-run/react';
+import {Await, NavLink, useAsyncValue, Link} from '@remix-run/react';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
+import {
+  RiSearch2Line,
+  RiAccountCircleLine,
+  RiShoppingCart2Line,
+  RiHeart3Line,
+} from 'react-icons/ri';
 
 /**
  * @param {HeaderProps}
  */
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
-  const {shop, menu} = header;
+  const {menu} = header;
   return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+    <header className="grid sticky top-0 left-0 z-50 bg-white">
+      <div className="w-full flex justify-center p-2 bg-primary text-white">
+        <strong>65$ before free shipping</strong>
+      </div>
+      <div className="flex justify-between w-full p-3">
+        <div className="flex gap-3 md:gap-8 items-center">
+          <Link
+            prefetch="intent"
+            to="/"
+            className="font-teko text-black text-5xl pt-1 hover:no-underline"
+          >
+            chronos
+          </Link>
+          <HeaderMenu
+            menu={menu}
+            viewport="desktop"
+            primaryDomainUrl={header.shop.primaryDomain.url}
+            publicStoreDomain={publicStoreDomain}
+          />
+        </div>
+
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      </div>
     </header>
   );
 }
@@ -38,11 +56,13 @@ export function HeaderMenu({
   viewport,
   publicStoreDomain,
 }) {
-  const className = `header-menu-${viewport}`;
   const {close} = useAside();
 
   return (
-    <nav className={className} role="navigation">
+    <nav
+      className="hidden md:flex gap-3 font-display text-black font-bold"
+      role="navigation"
+    >
       {viewport === 'mobile' && (
         <NavLink
           end
@@ -50,6 +70,7 @@ export function HeaderMenu({
           prefetch="intent"
           style={activeLinkStyle}
           to="/"
+          className="hover:underline"
         >
           Home
         </NavLink>
@@ -66,7 +87,7 @@ export function HeaderMenu({
             : item.url;
         return (
           <NavLink
-            className="header-menu-item"
+            className="hover:underline"
             end
             key={item.id}
             onClick={close}
@@ -92,9 +113,12 @@ function HeaderCtas({isLoggedIn, cart}) {
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
+            <RiAccountCircleLine />
           </Await>
         </Suspense>
+      </NavLink>
+      <NavLink to={'/wishlist'}>
+        <RiHeart3Line />
       </NavLink>
       <SearchToggle />
       <CartToggle cart={cart} />
@@ -117,8 +141,8 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+    <button onClick={() => open('search')}>
+      <RiSearch2Line />
     </button>
   );
 }
@@ -144,7 +168,7 @@ function CartBadge({count}) {
         });
       }}
     >
-      Cart {count === null ? <span>&nbsp;</span> : count}
+      <RiShoppingCart2Line />
     </a>
   );
 }

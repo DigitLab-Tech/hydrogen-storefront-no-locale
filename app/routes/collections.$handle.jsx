@@ -8,6 +8,7 @@ import {
 } from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import AddToWishlist from '~/components/AddToWishlist';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -130,7 +131,10 @@ function ProductItem({product, loading}) {
           sizes="(min-width: 45em) 400px, 100vw"
         />
       )}
-      <h4>{product.title}</h4>
+      <div className="flex gap-1 justify-center">
+        <h4>{product.title}</h4>
+        <AddToWishlist productId={product.id} />
+      </div>
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>

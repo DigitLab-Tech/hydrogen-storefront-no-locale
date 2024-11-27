@@ -2,12 +2,17 @@ import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
+import IconWithText from '~/components/IconWithText';
+import {SlEyeglass, SlBadge, SlAnchor} from 'react-icons/sl';
+import IconWithTexts from '~/components/IconWithTexts';
+import AddToWishlist from '~/components/AddToWishlist';
+import {ProductForm} from '~/components/ProductForm';
 
 /**
  * @type {MetaFunction}
  */
 export const meta = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{title: 'chronos | Home'}];
 };
 
 /**
@@ -62,9 +67,30 @@ function loadDeferredData({context}) {
 export default function Homepage() {
   /** @type {LoaderReturnData} */
   const data = useLoaderData();
+
   return (
     <div className="home">
       <FeaturedCollection collection={data.featuredCollection} />
+      <IconWithTexts>
+        <IconWithText
+          className="py-[150px] text-black"
+          text="Our expert carefully choose our watches for you!"
+        >
+          <SlEyeglass size="100px" />
+        </IconWithText>
+        <IconWithText
+          className="bg-primary py-[150px] text-white"
+          text="Our product are certified!"
+        >
+          <SlBadge size="100px" />
+        </IconWithText>
+        <IconWithText
+          className="py-[150px] text-black"
+          text="We are importing from all around the world!"
+        >
+          <SlAnchor size="100px" />
+        </IconWithText>
+      </IconWithTexts>
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -77,19 +103,25 @@ export default function Homepage() {
  */
 function FeaturedCollection({collection}) {
   if (!collection) return null;
+
   const image = collection?.image;
   return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
+    <div className="grid grid-cols-1 sm:grid-cols-2 items-center sm:justify-items-center bg-gray py-12 px-6 sm:py-3">
+      <div className="grid gap-3 max-w-[600px]">
+        <h1 className="text-6xl">{collection.title}</h1>
+        <span>{collection.description}</span>
+        <Link className="rounded bg-primary p-3 text-white w-fit font-bold">
+          Get a look
+        </Link>
+      </div>
+      <div className="hidden sm:block">
+        {image && (
+          <div className="max-w-[600px]">
+            <Image data={image} sizes="50vw" />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -100,17 +132,17 @@ function FeaturedCollection({collection}) {
  */
 function RecommendedProducts({products}) {
   return (
-    <div className="recommended-products">
+    <div className="grid bg-gray gap-8 p-12">
       <h2>Recommended Products</h2>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="recommended-products-grid">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 gap-y-6 justify-items-center">
               {response
                 ? response.products.nodes.map((product) => (
                     <Link
                       key={product.id}
-                      className="recommended-product"
+                      className="recommended-product font-bold text-center max-w-[350px] relative"
                       to={`/products/${product.handle}`}
                     >
                       <Image
@@ -118,7 +150,11 @@ function RecommendedProducts({products}) {
                         aspectRatio="1/1"
                         sizes="(min-width: 45em) 20vw, 50vw"
                       />
-                      <h4>{product.title}</h4>
+                      <div className="flex gap-1 justify-center">
+                        <h4>{product.title}</h4>
+                        <AddToWishlist productId={product.id} />
+                        <ProductForm product={product} />
+                      </div>
                       <small>
                         <Money data={product.priceRange.minVariantPrice} />
                       </small>
@@ -129,7 +165,6 @@ function RecommendedProducts({products}) {
           )}
         </Await>
       </Suspense>
-      <br />
     </div>
   );
 }
@@ -138,6 +173,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
     id
     title
+    description
     image {
       id
       url

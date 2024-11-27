@@ -10,6 +10,8 @@ import {getVariantUrl} from '~/lib/variants';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
+import AddToWishlist from '~/components/AddToWishlist';
+import Rating from '~/components/Rating';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -130,6 +132,7 @@ function redirectToFirstVariant({product, request}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product, variants} = useLoaderData();
+
   const selectedVariant = useOptimisticVariant(
     product.selectedVariant,
     variants,
@@ -138,14 +141,23 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
+    <div className="product m-auto max-w-[1440px]">
       <ProductImage image={selectedVariant?.image} />
       <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
+        <div className="grid gap-3">
+          <div>
+            <div className="flex flex-wrap gap-2">
+              <h1>{title}</h1>
+              <AddToWishlist productId={product.id} />
+            </div>
+            <Rating defaultValue={3} />
+          </div>
+          <ProductPrice
+            price={selectedVariant?.price}
+            compareAtPrice={selectedVariant?.compareAtPrice}
+          />
+        </div>
+
         <br />
         <Suspense
           fallback={
@@ -242,6 +254,12 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    texture: metafield(key: "texture", namespace: "custom"){
+      value
+    }
+    material: metafield(key: "material", namespace: "custom"){
+      value
+    }  
     options {
       name
       values

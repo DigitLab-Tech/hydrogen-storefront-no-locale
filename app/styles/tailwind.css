@@ -2,5 +2,28 @@
  * Configure Tailwind v4 in this file using CSS variables and directives:
  * https://tailwindcss.com/blog/tailwindcss-v4-alpha#css-first-configuration 
  */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
 
 @import 'tailwindcss';
+
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-display);
+}
+
+@theme {
+  --font-family-teko: 'Teko', 'sans-serif';
+  --font-family-display: 'Red Hat Display', 'sans-serif';
+  --font-family-roman: 'sans-serif';
+  --color-brun-cuir: #444;
+  --color-brun-cuir-light: #444;
+  --color-primary: #b1dad1;
+  --color-black: #222;
+  --color-gray: #f0f0f0;
+}
