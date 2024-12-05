@@ -6,7 +6,8 @@ import IconWithText from '~/components/IconWithText';
 import {SlEyeglass, SlBadge, SlAnchor} from 'react-icons/sl';
 import IconWithTexts from '~/components/IconWithTexts';
 import AddToWishlist from '~/components/AddToWishlist';
-import {ProductForm} from '~/components/ProductForm';
+import {AddToCartButton} from '~/components/AddToCartButton';
+import {useAside} from '~/components/Aside';
 
 /**
  * @type {MetaFunction}
@@ -131,6 +132,8 @@ function FeaturedCollection({collection}) {
  * }}
  */
 function RecommendedProducts({products}) {
+  const {open} = useAside();
+
   return (
     <div className="grid bg-gray gap-8 p-12">
       <h2>Recommended Products</h2>
@@ -139,27 +142,43 @@ function RecommendedProducts({products}) {
           {(response) => (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 gap-y-6 justify-items-center">
               {response
-                ? response.products.nodes.map((product) => (
-                    <Link
-                      key={product.id}
-                      className="recommended-product font-bold text-center max-w-[350px] relative"
-                      to={`/products/${product.handle}`}
-                    >
-                      <Image
-                        data={product.images.nodes[0]}
-                        aspectRatio="1/1"
-                        sizes="(min-width: 45em) 20vw, 50vw"
-                      />
-                      <div className="flex gap-1 justify-center">
-                        <h4>{product.title}</h4>
-                        <AddToWishlist productId={product.id} />
-                        <ProductForm product={product} />
+                ? response.products.nodes.map((product) => {
+                    return (
+                      <div key={product.id}>
+                        <Link
+                          className="recommended-product font-bold text-center max-w-[350px] relative"
+                          to={`/products/${product.handle}`}
+                        >
+                          <Image
+                            data={product.images.nodes[0]}
+                            aspectRatio="1/1"
+                            sizes="(min-width: 45em) 20vw, 50vw"
+                          />
+                          <div className="flex gap-1 justify-center">
+                            <h4>{product.title}</h4>
+                            <AddToWishlist productId={product.id} />
+                          </div>
+                          <small>
+                            <Money data={product.priceRange.minVariantPrice} />
+                          </small>
+                        </Link>
+                        <AddToCartButton
+                          onClick={() => {
+                            open('cart');
+                          }}
+                          lines={[
+                            {
+                              merchandiseId: product.variants.nodes[0].id,
+                              quantity: 1,
+                              selectedVariant: product.variants.nodes[0],
+                            },
+                          ]}
+                        >
+                          Add to cart
+                        </AddToCartButton>
                       </div>
-                      <small>
-                        <Money data={product.priceRange.minVariantPrice} />
-                      </small>
-                    </Link>
-                  ))
+                    );
+                  })
                 : null}
             </div>
           )}
@@ -202,6 +221,18 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       minVariantPrice {
         amount
         currencyCode
+      }
+    }
+    variants(first: 1){
+      nodes{
+        id
+        selectedOptions {
+          name
+          value
+        }
+        product {
+          handle
+        }
       }
     }
     images(first: 1) {

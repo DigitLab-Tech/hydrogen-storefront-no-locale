@@ -4,6 +4,8 @@ import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import AddToWishlist from '~/components/AddToWishlist';
+import {DYNAMIC_CONTENTS_QUERY} from '~/graphql/DynamicContents';
+import DynamicContents from '~/components/DynamicContents';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -36,13 +38,13 @@ async function loadCriticalData({context, request}) {
     pageBy: 8,
   });
 
-  const [{products}] = await Promise.all([
+  const [{products}, {metaobjects}] = await Promise.all([
     storefront.query(CATALOG_QUERY, {
       variables: {...paginationVariables},
     }),
-    // Add other queries here, so that they are loaded in parallel
+    storefront.query(DYNAMIC_CONTENTS_QUERY),
   ]);
-  return {products};
+  return {products, dynamicContents: metaobjects?.nodes ?? []};
 }
 
 /**
@@ -57,11 +59,12 @@ function loadDeferredData({context}) {
 
 export default function Collection() {
   /** @type {LoaderReturnData} */
-  const {products} = useLoaderData();
+  const {products, dynamicContents} = useLoaderData();
 
   return (
     <div className="collection">
       <h1>Products</h1>
+      <DynamicContents contents={dynamicContents} />
       <PaginatedResourceSection
         connection={products}
         resourcesClassName="products-grid"

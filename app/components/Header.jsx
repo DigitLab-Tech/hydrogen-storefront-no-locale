@@ -14,6 +14,7 @@ import {
  */
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {menu} = header;
+
   return (
     <header className="grid sticky top-0 left-0 z-50 bg-white">
       <div className="w-full flex justify-center p-2 bg-primary text-white">
